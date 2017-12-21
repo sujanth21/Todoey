@@ -13,10 +13,15 @@ class ToDoListViewController: UITableViewController {
     @IBOutlet weak var itemText: UILabel!
     
     var itemArray = ["Find Mike", "Buy Eggos", "Destroy Demogorgon"]
+    
+    var defaults = UserDefaults.standard
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        if let items = defaults.array(forKey: "ToDoListItemArray") as? [String] {
+            itemArray = items
+        }
     }
     
     //MARK - IBActions
@@ -30,6 +35,10 @@ class ToDoListViewController: UITableViewController {
         let action = UIAlertAction(title: "Add Item", style: .default) { (action) in
             
             self.itemArray.append(textField.text!)
+            
+            //Saving item into user defaults
+            self.defaults.set(self.itemArray, forKey: "ToDoListItemArray")
+            
             self.tableView.reloadData()
         }
         
@@ -71,9 +80,7 @@ class ToDoListViewController: UITableViewController {
             tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
         }
         
-        
         tableView.deselectRow(at: indexPath, animated: true)
-        
         
     }
 
